@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+</head>
+<style>
+    #app {
+        width: 400px;
+        height: 300px;
+        border: 3px solid white;
+        border-radius: 30px;
+        margin: auto;
+        padding-top: 80px;
+    }
+    .file-input {
+        margin-top: 30px;
+    }
+    .sub {
+        margin-top: 20px;
+    }
+</style>
+<body>
+<div id="app">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="username">UserName</label>
+            <input class="form-control" name="username" id="username" placeholder="UserName" type="text">
+        </div>
+        <div class="form-group file-input">
+            <label for="file">File Input</label>
+            <input id="file" name="file" type="file">
+        </div>
+        <button class="btn btn-primary sub" type="submit">Submit</button>
+    </form>
+</div>
+
+</body>
+</html>

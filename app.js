@@ -3,6 +3,7 @@ const multer = require('multer');
 const unzipper = require('unzipper');
 const fs = require('fs');
 const path = require('path');
+const {file} = require("unzipper/lib/Open");
 const app = express();
 const uploadPath = '/uploads';
 const staticPath = "./public"
@@ -28,7 +29,7 @@ app.post('/upload', uploads.single('file'), (req, res, next) => {
     let fileName = req.file.originalname
     if (!req.file) {
         return res.status(400).send('未上传文件');
-    }else if (path.extname(fileName) !== ".zip") {
+    } else if (path.extname(fileName) !== ".zip") {
         return res.status(400).send('请上传zip文件')
     }
 
@@ -52,15 +53,21 @@ app.post('/upload', uploads.single('file'), (req, res, next) => {
 
 // 返回文件上传表单
 app.get('/', (req, res) => {
-    res.send(`
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <label for="username">用户名</label>
-      <input type="text" id="username" name="username">
-      <input type="file" name="file">
-      <br><br>
-      <button type="submit">上传</button>
-    </form>
-  `);
+    //   res.send(`
+    //   <form action="/upload" method="POST" enctype="multipart/form-data">
+    //     <label for="username">用户名</label>
+    //     <input type="text" id="username" name="username">
+    //     <input type="file" name="file">
+    //     <br><br>
+    //     <button type="submit">上传</button>
+    //   </form>
+    // `);
+    fs.readFile('./index.html', function (err, data) {
+        if (err) {
+            res.end('Server err')
+        }
+        res.end(data)
+    })
 });
 
 // 展示解压后的文件列表
@@ -75,11 +82,14 @@ app.get('/files', (req, res) => {
         // files = files.filter(file => fs.statSync(`${filePath}/${file}`).isFile());
         // files = files.filter(file => path.extname(file) === ".html");
 
-        const fileLinks = files.map(file => `<a href="/${file}">${file}</a>`);
+        const fileLinks = files.map(file => `<a style="text-decoration: none;
+        color: rosybrown;padding: 10px; display: inline-block" href="/${file}">${file}</a>`);
 
         res.send(`
-      <h1>解压后的文件列表：</h1>
-      ${fileLinks.join('<br>')}
+      <div style="margin: auto;width: 400px;padding-top: 80px">
+      <h1 style="color: cornflowerblue">解压后的文件列表：</h1>
+      <p style="font-size: 20px">${fileLinks.join('<br>')}</p>
+</div>
     `);
     });
 });
@@ -95,7 +105,7 @@ app.get('/file/:username', function (req, res) {
     } else {
         username = req.params.username
     }
-    let filePath = path.join(directoryPath,username)
+    let filePath = path.join(directoryPath, username)
     fs.readdir(filePath, function (err, files) {
         if (err) {
             return console.log('Unable to scan directory: ' + err);
@@ -108,8 +118,8 @@ app.get('/file/:username', function (req, res) {
         files.forEach(function (file) {
             // const isDirectory = fs.statSync(path.join(filePath, file)).isDirectory();
             // if (isDirectory) {
-                const link = `<a href="/${username}/${file}">${file}</a>`;
-                linkArr.push(link);
+            const link = `<a href="/${username}/${file}">${file}</a>`;
+            linkArr.push(link);
             // }
         });
 
